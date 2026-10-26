@@ -47,12 +47,6 @@ jobs:
           echo "DATA_VERSION=$v" >> "$GITHUB_ENV"
       - name: Sync tables
         run: Rscript --vanilla scripts/sync-tables.R "$BUNDLE" "$DATA_VERSION"
-      - name: Bump patch version
-        run: |
-          Rscript --vanilla -e '
-            d <- read.dcf("DESCRIPTION"); v <- as.integer(strsplit(d[1, "Version"], "[.]")[[1]])
-            v[3] <- v[3] + 1L; d[1, "Version"] <- paste(v, collapse = ".")
-            write.dcf(d, "DESCRIPTION", keep.white = c("Description", "Authors@R"))'
       - uses: r-lib/actions/check-r-package@v2
         with:
           error-on: '"warning"'
@@ -64,9 +58,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
-          git add -A inst/extdata/release data-version.txt DESCRIPTION
+          git add -A inst/extdata/release data-version.txt
           git commit -m "data: sync tables $DATA_VERSION"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$branch"
           gh pr create --base main --head "$branch" \
             --title "data: sync tables $DATA_VERSION" \
-            --body "Automated sync from release tables-v$DATA_VERSION. Review the data diff, then merge and tag a v<pkg> release."
+            --body "Automated sync from release tables-v$DATA_VERSION. Review the data diff, then merge, and run the Release workflow (prepare-pr, then publish) when you want a package release."
