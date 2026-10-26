@@ -1,0 +1,140 @@
+code,description
+,Unspecified
+AD,Adult
+AL,Alevin
+BD,Bud or Budding
+BL,Blastula
+BS,Bud blast stage
+BT,Boot
+CC,Cocoon
+CM,Corm
+CO,Copepodid
+CP,Copepodite
+CS,Cleavage stage
+CY,Cyst
+EG,Egg
+EL,Elver
+EM,Embryo
+EX,Exponential growth phase (log)
+EY,"Eyed egg or stage, eyed embryo"
+F0,F0 generation
+F1,F1 generation
+F11,F11 generation
+F2,F2 generation
+F3,F3 generation
+F6,F6 generation
+F7,F7 generation
+FB,Mature (full-bloom stage) organism
+FG,Female gametophyte
+FI,Fingerling
+FO,Flower opening
+FT,Froglet
+FY,Fry
+GA,Gastrula
+GE,Gestation
+GL,Glochidia
+GM,Gamete
+GP,Lag growth phase
+GPS,Grain or seed formation stage
+GS,Germinated seed
+HD,Heading
+IB,Incipient bud
+IE,Internode elongation
+IG,Imago
+IM,Immature
+IN,Instar
+IT,Intermolt
+JN,Jointing
+JV,Juvenile
+LC,Lactational
+LE,Egg laying
+LP,Larva-pupa
+LR,Prolarva
+LV,Larva
+MA,Mature
+MD,Mature dormant
+ME,Megalopa
+MG,Male gametophyte
+ML,Morula
+MN,Mid-neurula
+MO,Molt
+MX,Multiple
+MY,Mysis
+NB,Newborn
+,Not coded
+ND,Naiad
+NE,Neonate
+NH,"New, newly or recent hatch"
+NL,Neurala
+NOINT,Not intact
+,Not reported
+NU,Nauplii
+NY,Nymph
+OO,"Oocyte, ova"
+PA,Parr
+PB,"Mature, post-bloom stage (fruit trees)"
+PC,Pre-hatch
+PD,Pre-molt
+PE,Post-emergence
+PG,Post-spawning
+PH,"Mature, pit-hardening stage (fruit trees)"
+PHT,Post-hatch
+PI,Post-molt
+PJ,"Pre-, sub-, semi-, near adult, or peripubertal"
+PK,Post-smolt
+PL,Pullet
+PN,Post-nauplius
+PO,"Pollen, pollen grain"
+PP,Postpartum
+PPU,Prepupal
+PQ,Pre-larva
+PRB,Prebloom
+PS,Pre-smolt
+PT,Protolarvae
+PU,Pupa
+PV,Post-larva
+PW,Pre-spawning
+PY,Post-embryo
+PZ,Protozoea
+RC,Rooted cuttings
+RH,Rhizome
+RP,Mature reproductive
+RST,Rootstock
+SA,Subadult
+SB,Shoot
+SC,"Yolk sac larvae, sac larvae"
+SCS,Senescence
+SD,Seed
+SE,Scape elongation
+SF,"Sac fry, yolk sac fry"
+SG,"Mature, side-green stage (fruit trees)"
+SI,Sexually immature
+SL,Seedling
+SM,Sexually mature
+SMT,Smolt
+SN,Sapling
+SO,Sporeling
+SP,Sperm
+SR,Spore
+ST,Spat
+SU,Swim-up
+SW,Spawning
+SY,Stationary growth phase
+TA,Tadpole
+TC,Tissue culture callus
+TLS,Tiller stage
+TN,Turion
+TU,Tuber
+TZ,Trophozoite
+UY,Underyearling
+VE,Veliger
+VG,Mature vegetative
+VI,Virgin
+WN,Weanling
+YA,Young adult
+YE,Yearling
+YO,Young
+YY,Young of year
+ZO,Zoea
+ZS,Zygospore
+ZY,Zygote

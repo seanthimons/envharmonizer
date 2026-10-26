@@ -1,0 +1,72 @@
+# Opens a PR that updates the embedded tables from a published tables release.
+# Untested until the Phase 3 dry run (build repo ROADMAP-SPLIT.md, section 5).
+name: Sync tables
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    if: startsWith(github.event.release.tag_name, 'tables-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+      - name: Download and vet the R bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          [[ "$TAG" =~ ^tables-v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "bad tag"; exit 1; }
+          v="${TAG#tables-v}"
+          name="envharmonizer-rds-$v"
+          mkdir -p "$RUNNER_TEMP/dl"
+          gh release download "$TAG" -R "$GITHUB_REPOSITORY" -D "$RUNNER_TEMP/dl" \
+            -p "$name.tar.gz" -p "$name.tar.gz.sha256"
+          cd "$RUNNER_TEMP/dl"
+          [[ "$(cut -d' ' -f1 "$name.tar.gz.sha256")" == "$(sha256sum "$name.tar.gz" | cut -d' ' -f1)" ]] \
+            || { echo "archive hash mismatch"; exit 1; }
+          # one top-level directory named after the archive; no absolute, '..', or link entries
+          if tar -tvzf "$name.tar.gz" | grep -vE '^[-d]'; then echo "non-file entries in archive"; exit 1; fi
+          if tar -tzf "$name.tar.gz" | grep -vE "^${name//./\\.}/([^/.][^/]*)?$"; then echo "unexpected path"; exit 1; fi
+          tar -xzf "$name.tar.gz"
+          echo "BUNDLE=$RUNNER_TEMP/dl/$name" >> "$GITHUB_ENV"
+          echo "DATA_VERSION=$v" >> "$GITHUB_ENV"
+      - name: Sync tables
+        run: Rscript --vanilla scripts/sync-tables.R "$BUNDLE" "$DATA_VERSION"
+      - name: Bump patch version
+        run: |
+          Rscript --vanilla -e '
+            d <- read.dcf("DESCRIPTION"); v <- as.integer(strsplit(d[1, "Version"], "[.]")[[1]])
+            v[3] <- v[3] + 1L; d[1, "Version"] <- paste(v, collapse = ".")
+            write.dcf(d, "DESCRIPTION", keep.white = c("Description", "Authors@R"))'
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          error-on: '"warning"'
+      - name: Open PR
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
+        run: |
+          branch="sync/tables-v$DATA_VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add -A inst/extdata/release data-version.txt DESCRIPTION
+          git commit -m "data: sync tables $DATA_VERSION"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "data: sync tables $DATA_VERSION" \
+            --body "Automated sync from release tables-v$DATA_VERSION. Review the data diff, then merge and tag a v<pkg> release."

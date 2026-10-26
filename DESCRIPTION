@@ -1,0 +1,29 @@
+Package: envharmonizer
+Title: Versioned Environmental Data Harmonization
+Version: 0.2.0
+Authors@R: person("Sean", "Thimons", email = "thimons.sean@gmail.com", role = c("aut", "cre"))
+Description: Offline access to versioned, reviewable snapshots of the
+    Analytical Methods and Open Spectral Database (AMOS), harmonized against
+    the Environment Ontology (ENVO) and the Chemical Methods Ontology (CHMO).
+    Also provides explicit, release-matched ECOTOX lifestage mappings with
+    source evidence and experimental review status. Released tables are
+    embedded for deterministic access; the package makes no network requests.
+License: MIT + file LICENSE
+URL: https://github.com/seanthimons/envharmonizer
+BugReports: https://github.com/seanthimons/envharmonizer/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
+    dplyr,
+    jsonlite,
+    tibble,
+    utils
+Suggests:
+    httr2,
+    readr,
+    testthat (>= 3.0.0),
+    withr
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.0

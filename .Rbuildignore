@@ -1,0 +1,10 @@
+^\.git$
+^\.github$
+^scripts$
+^README\.md$
+^CONTEXT\.md$
+^ATTRIBUTION\.md$
+^DATA_LICENSE\.md$
+^data-version\.txt$
+^.*\.Rcheck$
+^check$
