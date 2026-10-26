@@ -1,38 +1,39 @@
-name: Release source package
+# PR releases: prepare-pr opens a version-bump PR, merge it, then run publish
+# straight away (publish tags the current main HEAD). Needs the RELEASE_PAT
+# secret: Contents and Pull requests read/write on this repo.
+name: Release
 
 on:
-  push:
-    tags: ['v[0-9]*']
+  workflow_dispatch:
+    inputs:
+      release-mode:
+        description: Prepare a release PR or publish the merged version
+        type: choice
+        options: [prepare-pr, publish]
+        default: prepare-pr
+      version-type:
+        description: Version component to bump during PR preparation
+        type: choice
+        options: [patch, minor, major, dev]
+        default: patch
+      dry-run:
+        description: Check only; do not push, open a PR, or publish
+        type: boolean
+        default: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
-      - name: Tag must match DESCRIPTION
-        env:
-          TAG: ${{ github.ref_name }}
-        run: |
-          v="$(Rscript -e 'cat(read.dcf("DESCRIPTION", "Version")[[1]])')"
-          [[ "$TAG" == "v$v" ]] || { echo "tag $TAG != DESCRIPTION $v"; exit 1; }
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          error-on: '"warning"'
-          upload-snapshots: false
-      - name: Build and attach tarball
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
-        run: |
-          R CMD build .
-          gh release create "$TAG" "envharmonizer_${TAG#v}.tar.gz" --title "envharmonizer ${TAG#v}" --generate-notes
+    name: Release
+    permissions:
+      contents: write
+    uses: seanthimons/baseline/.github/workflows/release-r-package.yaml@733a6e4554870ab2fa8dd7495fa67bea029bb38c # v1.3.0
+    with:
+      release-mode: ${{ inputs.release-mode }}
+      version-type: ${{ inputs.version-type }}
+      notes-mode: generate-notes
+      dry-run: ${{ inputs.dry-run }}
+    secrets:
+      RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
