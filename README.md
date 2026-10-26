@@ -1,39 +1,74 @@
-# envharmonizer releases
+# envharmonizer
 
-Versioned Environmental Data Harmonization: checked source packages and offline
-data artifacts for AMOS and ECOTOX. Source development history remains private.
+Offline access to versioned tables that harmonize environmental method and
+ecotoxicology metadata: AMOS analytical methods mapped to the Environment
+Ontology (ENVO) and the Chemical Methods Ontology (CHMO), and explicit,
+release-matched ECOTOX lifestage mappings.
+
+The package makes no network requests. The released tables are embedded in the
+installed package, and `release_metadata()` reports which data version, schema
+version and source snapshots you are using.
 
 **Experimental mappings; not independently reviewed. Users must assess
 suitability for their analysis.**
 
-Install the experimental package:
+## Install
+
+Source tarballs are attached to each `v<version>` release. Pick a version from
+the [releases page](https://github.com/seanthimons/envharmonizer/releases):
 
 ```r
 install.packages(
-  'https://github.com/seanthimons/envharmonizer-releases/releases/download/v0.1.0/envharmonizer_0.1.0.tar.gz',
+  "https://github.com/seanthimons/envharmonizer/releases/download/v0.1.1/envharmonizer_0.1.1.tar.gz",
   repos = NULL,
-  type = 'source'
+  type = "source"
 )
 ```
 
-Use an explicit matching ECOTOX release. Mapping is optional and does not change
-the user's database:
+Requires R 4.1 or later and the `dplyr`, `jsonlite` and `tibble` packages. No
+system libraries are needed.
+
+Releases named `tables-v<version>` hold the data only (CSV, Parquet and R
+bundles with checksums). They are not installable packages.
+
+## Walk the matrix hierarchy
 
 ```r
-release <- 'ecotox_ascii_06_11_2026.zip'
-envharmonizer::lifestage_dictionary(release)
-envharmonizer::lifestage_review(release)
-envharmonizer::harmonize_lifestage(data.frame(org_lifestage = 'Adult'), release)
+library(envharmonizer)
+
+matrix_roots()                          # "analytical matrix"
+matrix_children("analytical matrix")    # its direct children
+matrix_descendants("analytical matrix") # everything below it
+
+harmonize_matrix(c("surface water", "sediment; soil"))
 ```
 
-Each release includes a source package, dictionary/seed/review CSV and Parquet
-files, evidence archive, manifest, review status, attribution, and SHA256SUMS.
-CSV column types and missing-value rules are defined in the manifest. Preserve
-the manifest with each analysis. Existing versioned release files are immutable.
+The analytical hierarchy has the same shape: `analytical_roots()`,
+`analytical_children()`, `analytical_descendants()`.
 
-Source licences remain applicable; new mapping contributions are CC BY 4.0.
-See the release attribution file for each source and its terms. Curation and
-software parity checks do not constitute independent scientific review.
+## ECOTOX lifestage
 
-Cite: Thimons, S. (2026). envharmonizer 0.1.0, ECOTOX artifact ecotox-v0.1.0.
-Also cite the source ontologies listed in the attribution file.
+Use an explicit matching ECOTOX release. Mapping is optional and does not change
+your database:
+
+```r
+release <- "ecotox_ascii_06_11_2026.zip"
+lifestage_dictionary(release)
+lifestage_review(release)
+harmonize_lifestage(data.frame(org_lifestage = "Adult"), release)
+```
+
+## Data provenance and licences
+
+The tables are built from public sources in a separate private build
+repository and published here as checksummed releases. A sync workflow copies
+a verified release into `inst/extdata/release/` through a pull request. Source
+licences remain applicable; see `ATTRIBUTION.md` and `DATA_LICENSE.md` (also
+installed with the package). New mapping contributions are CC BY 4.0. Curation
+and software parity checks do not constitute independent scientific review.
+
+Releases are immutable. A correction is a new version.
+
+Cite: Thimons, S. envharmonizer, with the release version from
+`release_metadata()`. Also cite the source ontologies listed in the attribution
+file.
