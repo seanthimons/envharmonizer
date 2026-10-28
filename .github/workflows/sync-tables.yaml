@@ -57,8 +57,12 @@ jobs:
           branch="sync/tables-v$DATA_VERSION"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
           git add -A inst/extdata/release data-version.txt
+          if git diff --cached --quiet; then
+            echo "Tables $DATA_VERSION already match the embedded data; no PR needed."
+            exit 0
+          fi
+          git checkout -b "$branch"
           git commit -m "data: sync tables $DATA_VERSION"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$branch"
           gh pr create --base main --head "$branch" \
