@@ -258,7 +258,7 @@ concert_media_map <- function() {
 
 # Highest release-manifest schema this code can read. Bump together with any
 # column, type, or table change to the released tables.
-SUPPORTED_SCHEMA_VERSION <- 1L
+SUPPORTED_SCHEMA_VERSION <- 2L
 
 check_release_schema <- function(manifest, supported = SUPPORTED_SCHEMA_VERSION) {
   schema <- manifest$schema_version

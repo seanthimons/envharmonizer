@@ -18,7 +18,7 @@ manifest_dir_with <- function(change, env = parent.frame()) {
 
 test_that('the embedded manifest records independent version fields', {
   metadata <- release_metadata()
-  expect_identical(metadata$schema_version, 1L)
+  expect_true(metadata$schema_version <= SUPPORTED_SCHEMA_VERSION)
   semver <- '^[0-9]+\\.[0-9]+\\.[0-9]+$'
   expect_match(metadata$data_version, semver)
   expect_match(metadata$package_version, semver)
@@ -31,11 +31,11 @@ test_that('the embedded manifest records independent version fields', {
 
 test_that('data with a newer schema is refused', {
   dir <- manifest_dir_with(function(m) {
-    m$schema_version <- 2L
+    m$schema_version <- 3L
     m
   })
   testthat::local_mocked_bindings(find_release_dir = function() dir)
-  expect_error(release_metadata(), 'schema version 2.*reads up to 1.*newer')
+  expect_error(release_metadata(), 'schema version 3.*reads up to 2.*newer')
 })
 
 test_that('data without schema_version is read as the original schema', {

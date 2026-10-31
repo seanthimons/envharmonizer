@@ -2,11 +2,14 @@
 % Please edit documentation in R/lifestage.R
 \name{lifestage_dictionary}
 \alias{lifestage_dictionary}
+\alias{lifestage_species_groups}
 \alias{lifestage_review}
 \alias{harmonize_lifestage}
 \title{Explicit offline ECOTOX lifestage mapping}
 \usage{
 lifestage_dictionary(ecotox_release)
+
+lifestage_species_groups(ecotox_release)
 
 lifestage_review(ecotox_release)
 
@@ -15,21 +18,31 @@ harmonize_lifestage(x, ecotox_release)
 \arguments{
 \item{ecotox_release}{Exact ECOTOX source release identifier. Required.}
 
-\item{x}{Data frame with \code{org_lifestage}. Source columns are preserved.
-Existing derived or mapping provenance columns are rejected.}
+\item{x}{Data frame with \code{org_lifestage} and either \code{eco_group}, the ECOTOX
+species group of each row, or \code{species_number}, which is looked up in
+\code{lifestage_species_groups()}. \code{eco_group} is used when both are present.
+Missing, unrecognized or unlisted groups use the \code{Unknown} mapping. Source
+columns are preserved. Existing derived or mapping provenance columns are
+rejected.}
 }
 \value{
-\code{lifestage_dictionary()} returns mapping evidence and derived fields.
+\code{lifestage_dictionary()} returns mapping evidence and derived fields,
+one row per \code{org_lifestage} and \code{eco_group}.
+\code{lifestage_species_groups()} returns one \code{eco_group} per ECOTOX
+\code{species_number}.
 \code{lifestage_review()} returns unresolved decisions and evidence.
 \code{harmonize_lifestage()} returns the input rows, in order, with derived
-fields and portable mapping provenance. Unknown descriptions have missing
-derived fields and an explicit status.
+fields and portable mapping provenance. \code{lifestage_eco_group} records the
+group used for the join. Unknown descriptions have missing derived fields
+and an explicit status.
 }
 \description{
 Experimental mappings; not independently reviewed. Users must assess
-suitability for their analysis. Matching uses the source description,
-not the taxon. No provider request or database change is made.
+suitability for their analysis. Matching uses the source description and
+the ECOTOX taxon group (\code{eco_group}), because some descriptions mean
+different stages in different taxa. No provider request or database change
+is made. Requires lifestage tables with schema 2.x; older tables are refused.
 September 2026 applicability was checked against identical native source
 code-description pairs. Its tables identify June 2026 as the mapping evidence
-release. June tables remain unchanged. Only explicitly listed releases work.
+release. Only explicitly listed releases work.
 }
