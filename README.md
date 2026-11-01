@@ -49,14 +49,25 @@ The analytical hierarchy has the same shape: `analytical_roots()`,
 ## ECOTOX lifestage
 
 Use an explicit matching ECOTOX release. Mapping is optional and does not change
-your database:
+your database. Some descriptions mean different stages in different taxa (a
+new hatch is a larva for fish but a juvenile for birds), so each row also needs
+its `eco_group`, or its ECOTOX `species_number`, which is looked up in
+`lifestage_species_groups()`. Missing, unrecognized or unlisted groups use the
+`Unknown` mapping:
 
 ```r
 release <- "ecotox_ascii_06_11_2026.zip"
-lifestage_dictionary(release)
+lifestage_dictionary(release) # one row per org_lifestage and eco_group
 lifestage_review(release)
-harmonize_lifestage(data.frame(org_lifestage = "Adult"), release)
+lifestage_species_groups(release) # species_number -> eco_group
+harmonize_lifestage(
+  data.frame(org_lifestage = "New, newly or recent hatch", eco_group = "Birds"),
+  release
+)
 ```
+
+Lifestage functions need lifestage tables with schema 2.x and refuse older
+ones.
 
 ## Data provenance and licences
 

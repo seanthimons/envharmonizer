@@ -19,6 +19,7 @@ Imports:
     tibble,
     utils
 Suggests:
+    digest,
     httr2,
     readr,
     testthat (>= 3.0.0),

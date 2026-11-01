@@ -26,6 +26,7 @@ main <- function() {
   tables <- c(
     names(manifest$table_content_sha256),
     names(manifest$ecotox$table_content_sha256),
+    names(manifest$ecotox$species_groups$table_content_sha256),
     unlist(lapply(manifest$ecotox$additional_releases, function(r) names(r$table_content_sha256)))
   )
   if (anyDuplicated(tables)) stop('A table is listed twice in the manifest.', call. = FALSE)
