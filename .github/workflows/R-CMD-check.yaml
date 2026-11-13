@@ -16,6 +16,6 @@ permissions:
 jobs:
   r-cmd-check:
     name: R CMD check
-    uses: seanthimons/baseline/.github/workflows/r-cmd-check.yaml@733a6e4554870ab2fa8dd7495fa67bea029bb38c # v1.3.0
+    uses: seanthimons/baseline/.github/workflows/r-cmd-check.yaml@0a6e332d70f7a15520c62870221b35ef040ef933 # v2.0.0
     with:
       matrix: '[{"os":"ubuntu-latest","r":"release"}]'

@@ -8,3 +8,5 @@
 ^data-version\.txt$
 ^.*\.Rcheck$
 ^check$
+^\.gitattributes$
+^\.gitleaks\.toml$

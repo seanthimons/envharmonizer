@@ -29,7 +29,7 @@ jobs:
     name: Release
     permissions:
       contents: write
-    uses: seanthimons/baseline/.github/workflows/release-r-package.yaml@733a6e4554870ab2fa8dd7495fa67bea029bb38c # v1.3.0
+    uses: seanthimons/baseline/.github/workflows/release-r-package.yaml@0a6e332d70f7a15520c62870221b35ef040ef933 # v2.0.0
     with:
       release-mode: ${{ inputs.release-mode }}
       version-type: ${{ inputs.version-type }}
